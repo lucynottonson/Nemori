@@ -1,6 +1,16 @@
-import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
+import NextAuth, { NextAuthOptions, DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { supabase } from "@/lib/supabase";
+
+declare module "next-auth" {
+  interface User {
+    id: string;
+  }
+
+  interface Session {
+    user: User & DefaultSession["user"];
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -24,16 +34,12 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, token }: { session: Session; token: any }) {
+    async session({ session }: { session: DefaultSession }) {
       const { data } = await supabase.auth.getUser();
 
-      session.user = data?.user
-        ? {
-            name: data.user.user_metadata?.full_name || null, 
-            email: data.user.email || null,
-            image: data.user.user_metadata?.avatar_url || null, 
-          }
-        : undefined; 
+      if (session.user) {
+        session.user.id = data?.user?.id || "";  
+      }
 
       return session;
     },

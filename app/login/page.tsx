@@ -1,6 +1,5 @@
-"use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router"; 
 import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
@@ -8,20 +7,18 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const router = useRouter(); 
 
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
       if (data?.session) {
-        router.replace("/dashboard"); // Redirect if already logged in
-      } else {
-        setLoading(false); // Stop showing loading state
+        router.replace("/dashboard"); 
+        setLoading(false); 
       }
     };
     checkSession();
-  }, [router]); // Runs only once
-
+  }, [router]); 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -31,7 +28,7 @@ export default function LoginPage() {
     setError("");
     setSuccess("");
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email: formData.email,
       password: formData.password,
     });
@@ -46,7 +43,7 @@ export default function LoginPage() {
     }
   };
 
-  if (loading) return <p>Loading...</p>; // Prevents flickering
+  if (loading) return <p>Loading...</p>; 
 
   return (
     <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px", border: "1px solid #ddd", borderRadius: "8px", boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)" }}>

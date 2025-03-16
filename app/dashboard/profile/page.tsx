@@ -1,18 +1,27 @@
 "use client";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import Image from "next/image";
+
+interface User {
+  id: string;
+  email: string;
+  user_metadata: {
+    avatar_url: string | null;
+  };
+}
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (!error && data.user) {
-        setUser(data.user);
-        setAvatarUrl(data.user?.user_metadata?.avatar_url || null);
+      const { error } = await supabase.auth.getUser();
+      if (!error && user) {
+        setUser(user);
+        setAvatarUrl(user?.user_metadata?.avatar_url || null);
       }
     };
     fetchUser();
@@ -61,7 +70,7 @@ export default function ProfilePage() {
     <div className="max-w-md mx-auto p-6 border rounded-lg shadow-lg text-center">
       <h1 className="text-2xl font-semibold">Profile Page</h1>
       {avatarUrl ? (
-        <img src={avatarUrl} alt="Profile" className="w-24 h-24 rounded-full mx-auto my-4" />
+        <Image src={avatarUrl} alt="Profile" className="w-24 h-24 rounded-full mx-auto my-4" width={96} height={96} />
       ) : (
         <p>No profile picture</p>
       )}
