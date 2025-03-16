@@ -16,6 +16,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ message: "you exist in nemori now.", data }, { status: 201 });
   } catch (error) {
+    console.error(error); 
     return NextResponse.json({ error: "Pray with me. There is an error." }, { status: 500 });
   }
 }

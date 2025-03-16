@@ -8,7 +8,7 @@ declare module "next-auth" {
   }
 
   interface Session {
-    user: User & DefaultSession["user"];
+    user: User & DefaultSession["user"]; 
   }
 }
 
@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (error || !data.user) return null;
-        return { id: data.user.id, email: data.user.email };
+        return { id: data.user.id, email: data.user.email }; 
       },
     }),
   ],
@@ -38,7 +38,7 @@ export const authOptions: NextAuthOptions = {
       const { data } = await supabase.auth.getUser();
 
       if (session.user) {
-        session.user.id = data?.user?.id || "";  
+        session.user.id = data?.user?.id || "";
       }
 
       return session;

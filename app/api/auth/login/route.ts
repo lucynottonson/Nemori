@@ -15,7 +15,8 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ message: "YOU ARE LOGGED IN", data }, { status: 200 });
-  } catch (error) {
+  } catch (error: any) {
+    console.error(error); 
     return NextResponse.json({ error: "something went very wrong. join me in prayer as it is the Lord's will" }, { status: 500 });
   }
 }

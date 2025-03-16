@@ -47,7 +47,7 @@ export default function Navbar() {
     <nav>
       <h1 style={{ display: "flex", alignItems: "center", fontSize: "2rem" }}>
         <Image src="/icon.png" alt="Nemori Icon" width={40} height={40} style={{ marginRight: "10px" }} />
-        <Link href="/">Nemori</Link>
+        <Link href="/" className={pathname === "/" ? "active" : ""}>Nemori</Link>
       </h1>
       <ul>
         {user ? (
