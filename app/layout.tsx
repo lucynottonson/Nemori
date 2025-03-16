@@ -1,34 +1,29 @@
-import type { Metadata } from "next";
+"use client";
 import { Geist, Geist_Mono, Nobile } from "next/font/google";
 import "./globals.css";
 import Image from "next/image";
+import Navbar from "@/components/navbar";
+import { SessionProvider } from "next-auth/react";
 
 const nobile = Nobile({
   subsets: ['latin'],
   variable: "--font-nobile",
   display: "swap",
-  weight: "400"
-})
+  weight: "400",
+  preload: false,
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  preload: false,
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  preload: false,
 });
-
-export const metadata: Metadata = {
-  title: "Nemori",
-  description: "hi",
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/logo.png",
-  }
-};
 
 export default function RootLayout({
   children,
@@ -38,10 +33,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${nobile.variable} antialiased`}
       >
-        <Image src="/icon.png" alt="Site Icon" width={100} height={100} />
-        {children}
+        <SessionProvider>
+          <Navbar />
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );
