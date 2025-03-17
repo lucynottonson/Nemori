@@ -9,18 +9,24 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false); 
   const router = useRouter(); 
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
-      if (data?.session) {
+      if (data?.session && isMounted) {  
         router.replace("/dashboard"); 
         setLoading(false); 
       }
     };
     checkSession();
-  }, [router]); 
+  }, [router, isMounted]); 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
