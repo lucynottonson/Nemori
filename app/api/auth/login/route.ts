@@ -2,16 +2,6 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { AuthTokenResponsePassword } from "@supabase/supabase-js";
 
-interface AuthData {
-  user: {
-    id: string;
-    email?: string;  
-    user_metadata: {
-      avatar_url?: string | null;  
-    };
-  } | null;  
-}
-
 export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
@@ -22,7 +12,7 @@ export async function POST(req: Request) {
     });
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 }); // Error message from AuthError
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     if (!data?.user) {
