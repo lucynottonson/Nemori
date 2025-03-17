@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router"; 
+import { useRouter } from "next/router";  // Import useRouter directly
 import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
@@ -9,23 +9,24 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
-  const [isMounted, setIsMounted] = useState(false); 
-  const router = useRouter(); 
+  const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();  // Use useRouter directly in the client
 
   useEffect(() => {
+    // This ensures that we have access to the router only on the client-side
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
     const checkSession = async () => {
       const { data } = await supabase.auth.getSession();
-      if (data?.session && isMounted) {  
-        router.replace("/dashboard"); 
-        setLoading(false); 
+      if (data?.session && isMounted) {
+        router.replace("/dashboard");
+        setLoading(false);
       }
     };
     checkSession();
-  }, [router, isMounted]); 
+  }, [router, isMounted]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -51,7 +52,7 @@ export default function LoginPage() {
     }
   };
 
-  if (loading) return <p>Loading...</p>; 
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div style={{ maxWidth: "400px", margin: "50px auto", padding: "20px", border: "1px solid #ddd", borderRadius: "8px", boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)" }}>
