@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
+import { AuthError, AuthTokenResponsePassword } from "@supabase/supabase-js"; // Import AuthError
 
 interface AuthData {
   user: {
@@ -15,20 +16,20 @@ export async function POST(req: Request) {
   try {
     const { email, password } = await req.json();
 
-    const { data, error }: { data: AuthData | null; error: Error | null } = await supabase.auth.signInWithPassword({
+    const { data, error }: AuthTokenResponsePassword = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+      return NextResponse.json({ error: error.message }, { status: 400 }); // Error message from AuthError
     }
 
-  if (!data?.user) {
+    if (!data?.user) {
       return NextResponse.json({ error: "No user found" }, { status: 400 });
     }
 
-   if (!data.user.email) {
+    if (!data.user.email) {
       return NextResponse.json({ error: "Email is missing in the response" }, { status: 400 });
     }
 
@@ -39,6 +40,6 @@ export async function POST(req: Request) {
     } else {
       console.error("An unknown error occurred");
     }
-    return NextResponse.json({ error: "something went very wrong. join me in prayer as it is the Lord's will" }, { status: 500 });
+    return NextResponse.json({ error: "Something went very wrong. Join me in prayer as it is the Lord's will" }, { status: 500 });
   }
 }
