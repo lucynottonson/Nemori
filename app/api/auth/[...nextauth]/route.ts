@@ -2,13 +2,14 @@ import NextAuth, { NextAuthOptions, DefaultSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { supabase } from "@/lib/supabase";
 
+// Extend NextAuth's User and Session types to include `id`
 declare module "next-auth" {
   interface User {
-    id: string;
+    id: string; // Add id to the User type
   }
 
   interface Session {
-    user: User & DefaultSession["user"]; 
+    user: User & DefaultSession["user"]; // Ensure session.user includes id
   }
 }
 
@@ -29,18 +30,16 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (error || !data.user) return null;
-        return { id: data.user.id, email: data.user.email }; 
+        return { id: data.user.id, email: data.user.email }; // Return `id` here
       },
     }),
   ],
   callbacks: {
-    async session({ session }: { session: DefaultSession }) {
-      const { data } = await supabase.auth.getUser();
-
+    async session({ session, token }) {
       if (session.user) {
-        session.user.id = data?.user?.id || "";
+        // Ensure session.user includes the `id`
+        session.user.id = token.id as string;
       }
-
       return session;
     },
   },
