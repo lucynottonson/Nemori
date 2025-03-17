@@ -45,7 +45,7 @@ export default function ProfilePage() {
 
       await supabase.storage.from("profile-pictures").remove([filePath]);
 
-      const { data, error } = await supabase.storage
+      const { error } = await supabase.storage
         .from("profile-pictures")
         .upload(filePath, file, { upsert: true });
 

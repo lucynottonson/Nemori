@@ -4,10 +4,11 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { User } from '@supabase/supabase-js';
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
