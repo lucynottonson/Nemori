@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router"; 
+import { useRouter } from "next/navigation"; 
 import { supabase } from "@/lib/supabase";
 
 export default function LoginPage() {
@@ -9,25 +9,18 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(true);
-  const [isMounted, setIsMounted] = useState(false); 
   const router = useRouter(); 
 
   useEffect(() => {
-    setIsMounted(true); 
-  }, []);
-
-  useEffect(() => {
-    if (isMounted) {
-      const checkSession = async () => {
-        const { data } = await supabase.auth.getSession();
-        if (data?.session) {
-          router.replace("/dashboard");
-          setLoading(false);
-        }
-      };
-      checkSession();
-    }
-  }, [isMounted, router]); 
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data?.session) {
+        router.replace("/dashboard");
+        setLoading(false);
+      }
+    };
+    checkSession();
+  }, [router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
