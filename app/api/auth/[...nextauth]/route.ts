@@ -1,7 +1,8 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { supabase } from "@/lib/supabase";
+'import supabase from "@/lib/supabase"'
 import { DefaultSession } from "next-auth"; 
+import { supabase } from "@/lib/supabase";
 
 declare module "next-auth" {
   interface User {
