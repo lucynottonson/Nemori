@@ -1,19 +1,19 @@
-import NextAuth, { NextAuthOptions, DefaultSession } from "next-auth";
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { supabase } from "@/lib/supabase";
+import { DefaultSession } from "next-auth"; 
 
-// Extend NextAuth's User and Session types to include `id`
 declare module "next-auth" {
   interface User {
-    id: string; // Add id to the User type
+    id: string;
   }
 
-  interface Session {
-    user: User & DefaultSession["user"]; // Ensure session.user includes id
+  interface Session extends DefaultSession { 
+    user: User & DefaultSession["user"];
   }
 }
 
-export const authOptions: NextAuthOptions = {
+const handler = NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -30,14 +30,13 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (error || !data.user) return null;
-        return { id: data.user.id, email: data.user.email }; // Return `id` here
+        return { id: data.user.id, email: data.user.email };
       },
     }),
   ],
   callbacks: {
     async session({ session, token }) {
       if (session.user) {
-        // Ensure session.user includes the `id`
         session.user.id = token.id as string;
       }
       return session;
@@ -46,7 +45,6 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
   },
-};
+});
 
-const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
