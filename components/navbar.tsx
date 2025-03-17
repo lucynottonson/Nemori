@@ -14,12 +14,17 @@ export default function Navbar() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error("ERROR figure it out by looking at this:", error);
-      } else {
-        setUser(data?.session?.user || null);
-        setAvatarUrl(data?.session?.user?.user_metadata?.avatar_url || null);
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("big error:", error);
+        } else {
+          const sessionUser = data?.session?.user || null;
+          setUser(sessionUser);
+          setAvatarUrl(sessionUser?.user_metadata?.avatar_url || null);
+        }
+      } catch (error) {
+        console.error("Uerror :():", error);
       }
       setLoading(false);
     };
@@ -37,9 +42,13 @@ export default function Navbar() {
   }, []);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    window.location.href = "/";
+    try {
+      await supabase.auth.signOut();
+      setUser(null);
+      window.location.href = "/LOG IN"; 
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   if (loading) return null; 
@@ -57,21 +66,24 @@ export default function Navbar() {
               {avatarUrl ? (
                 <Image src={avatarUrl} alt="Profile" width={40} height={40} style={{ borderRadius: "50%" }} />
               ) : (
-                "HELLO, " + user.email
+                `HELLO, ${user.email}`
               )}
             </li>
             <li>
               <Link href="/dashboard/profile">Profile</Link>
             </li>
             <li>
-              <button onClick={handleSignOut} style={{ borderRadius: "5px", padding: "6px 12px", backgroundColor: "#d9534f", color: "white", cursor: "pointer" }}>
+              <button 
+                onClick={handleSignOut} 
+                style={{ borderRadius: "5px", padding: "6px 12px", backgroundColor: "#d9534f", color: "white", cursor: "pointer" }}
+              >
                 Logout
               </button>
             </li>
           </>
         ) : (
           <>
-            <li><Link href="/login">LEAVE</Link></li>
+            <li><Link href="/login">LOGIN</Link></li>  
             <li><Link href="/register">JOIN US</Link></li>
           </>
         )}
