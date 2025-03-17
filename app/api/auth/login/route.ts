@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { AuthError, AuthTokenResponsePassword } from "@supabase/supabase-js"; // Import AuthError
+import { AuthTokenResponsePassword } from "@supabase/supabase-js";
 
 interface AuthData {
   user: {
